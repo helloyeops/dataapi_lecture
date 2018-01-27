@@ -1,16 +1,20 @@
 # Data API 실습
 
-- HDP 샌드박스 설치 : 2.6.3
+## 실습 환경 구축
+- Virtualbox 다운로드 & 설치
+> https://www.virtualbox.org
 
+- HDP 샌드박스(v2.6.3) 다운로드
 > https://downloads-hortonworks.akamaized.net/sandbox-hdp-2.6.3/HDP_2.6.3_virtualbox_16_11_2017.ova
-
-<br>
 
 - root 패스워드 변경 : hadoop(초기 패스워드) -> bigdata1234
 
-<br>
+- Local PC hosts 에 hostname 등록
 
-- HDFS 계정으로 전환 : su - hdfs
+> 127.0.0.1 sandbox.hortonworks.com sandbox-hdp.hortonworks.com sandbox-hdf.hortonworks.com
+
+- HDFS 계정으로 전환<br>
+`su - hdfs`
 
 <br>
 

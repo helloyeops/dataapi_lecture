@@ -3,11 +3,11 @@
 ## 실습 환경 구축
 
 - Virtualbox 다운로드 & 설치
-> https://www.virtualbox.org/wiki/Downloads
+    > https://www.virtualbox.org/wiki/Downloads
 - HDP 샌드박스(v2.6.3) 다운로드
-> https://downloads-hortonworks.akamaized.net/sandbox-hdp-2.6.3/HDP_2.6.3_virtualbox_16_11_2017.ova
+    > https://downloads-hortonworks.akamaized.net/sandbox-hdp-2.6.3/HDP_2.6.3_virtualbox_16_11_2017.ova
 - putty 다운로드
-> https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html
+    > https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html
 - Local PC hosts 에 hostname 등록
 
     `127.0.0.1 sandbox-hdp.hortonworks.com`
@@ -28,7 +28,7 @@ $ ambari-admin-password-reset
 
 ## Hadoop 구동 및 상태 확인
 - Ambari 접속 (Web browser)
-> http://sandbox-hdp.hortonworks.com:8080 (admin / admin)
+    > http://sandbox-hdp.hortonworks.com:8080 (admin / admin)
 - Hadoop Eco 구동
     - HDFS
     - YARN

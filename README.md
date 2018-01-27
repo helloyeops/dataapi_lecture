@@ -22,6 +22,9 @@
 # admin 으로 변경
 $ ambari-admin-password-reset
 ```
+
+<br>
+
 ## Hadoop 구동 및 상태 확인
 - Ambari 접속 (Web browser)
 > http://sandbox-hdp.hortonworks.com:8080 (admin / admin)
@@ -71,12 +74,13 @@ $ ambari-admin-password-reset
     - Oozie
     > http://sandbox-hdp.hortonworks.com:11000/oozie
 
+<br>
+
 ## API 관련 패키지 설치
 - Data API 모듈 설치
     - API Gateway
     - Streaming
-    - Hadoop Batch
-    - SSO, OAuth    
+    - Hadoop Batch  
 - DB 스키마 생성
     - MySQL 접속 정보 (공통)
 
@@ -94,12 +98,49 @@ $ ambari-admin-password-reset
     |-|-|
     |Globalworkflow|dpcore_globalworkflow|
     |Streaming|dpcore_streaming|
-    |Hadoop Batch|dpcore_|
-    |SSO||
-    |OAuth||
+    |Hadoop Batch|wfs|
+- DB 접속
+```bash
+$ mysql -uroot -p
+# password : haddop
+```
+- 데이터베이스/사용자 생성
+```sql
+-- Globalworkflow
+CREATE DATABASE dpcore_globalworkflow;
 
+CREATE USER 'dpcore_globalworkflow'@'%' IDENTIFIED BY 'globalworkflow';
+GRANT ALL PRIVILEGES ON *.* TO 'dpcore_globalworkflow'@'%';
+CREATE USER 'dpcore_globalworkflow'@'localhost' IDENTIFIED BY 'globalworkflow';
+GRANT ALL PRIVILEGES ON *.* TO 'dpcore_globalworkflow'@'localhost';
+CREATE USER 'dpcore_globalworkflow'@'sandbox-hdp.hortonworks.com' IDENTIFIED BY 'globalworkflow';
+GRANT ALL PRIVILEGES ON *.* TO 'dpcore_globalworkflow'@'sandbox-hdp.hortonworks.com';
 
-- 데이터베이스 및 테이블 생성 : streaming, sso
+-- Streaming
+CREATE DATABASE dpcore_streaming;
+
+CREATE USER 'streaming'@'%' IDENTIFIED BY 'globalworkflow';
+GRANT ALL PRIVILEGES ON *.* TO '<사용자명>'@'%';
+CREATE USER 'streaming'@'localhost' IDENTIFIED BY 'streaming';
+GRANT ALL PRIVILEGES ON *.* TO 'streaming'@'localhost';
+CREATE USER 'streaming'@'sandbox-hdp.hortonworks.com' IDENTIFIED BY 'streaming';
+GRANT ALL PRIVILEGES ON *.* TO 'streaming'@'sandbox-hdp.hortonworks.com';
+
+-- Hadoop bath
+CREATE DATABASE wfs;
+
+CREATE USER 'wfs'@'%' IDENTIFIED BY 'wfs';
+GRANT ALL PRIVILEGES ON *.* TO 'wfs'@'%';
+CREATE USER 'wfs'@'localhost' IDENTIFIED BY 'wfs';
+GRANT ALL PRIVILEGES ON *.* TO 'wfs'@'localhost';
+CREATE USER 'wfs'@'sandbox-hdp.hortonworks.com' IDENTIFIED BY 'wfs';
+GRANT ALL PRIVILEGES ON *.* TO 'wfs'@'sandbox-hdp.hortonworks.com';
+
+FLUSH PRIVILEGES;
+```
+
+- 및 테이블 생성 : streaming, sso
+
 
 <br>
 

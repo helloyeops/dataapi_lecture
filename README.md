@@ -3,7 +3,7 @@
 ## 실습 환경 구축
 
 - Virtualbox 다운로드 & 설치
-> https://www.virtualbox.org
+> https://www.virtualbox.org/wiki/Downloads
 - HDP 샌드박스(v2.6.3) 다운로드
 > https://downloads-hortonworks.akamaized.net/sandbox-hdp-2.6.3/HDP_2.6.3_virtualbox_16_11_2017.ova
 - putty 다운로드
@@ -16,19 +16,33 @@
     - username : root
     - password : hadoop
 - root 패스워드 변경 : hadoop(초기 패스워드) -> bigdata1234
-- Ambari 관리자 암호 설정<br>
+- Ambari 관련 설정
 ```bash
-$ ambari-admin-password-reset
+# abmari 관리자 password 변경(web 접근시 필요)
 # admin 으로 변경
+$ ambari-admin-password-reset
 ```
-- Ambari 서버 start<br>
-`$ ambari-server start`
-- HDFS 계정으로 전환<br>
-`$ su - hdfs`
-
-## Hadoop 구동
-- Ambari 접속
-> http://sandbox-hdp.hortonworks.com:8080 (admin/admin)
+## Hadoop 구동 및 상태 확인
+- Ambari 접속 (Web browser)
+> http://sandbox-hdp.hortonworks.com:8080<br>
+> (admin / admin)
+- Hadoop Eco 구동
+    - HDFS
+    - YARN
+    - MapReduce
+    - Hive
+    - Oozie
+    - Kafka
+    - Sark2
+- Hadoop Eco 상태 확인
+    - HDFS
+    ```bash
+    $ hadoop fs -ls /
+    ```
+    - YARN
+    > http://sandbox-hdp.hortonworks.com:8088
+    - MapReduce
+    > http://sandbox-hdp.hortonworks.com:19888
 
 ## API 관련 패키지 설치
 <br>

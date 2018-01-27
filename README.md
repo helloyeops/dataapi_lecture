@@ -34,6 +34,7 @@ $ ambari-admin-password-reset
     - MapReduce
     - Hive
     - Oozie
+    - Zookeeper
     - Kafka
     - Sark2
 - Hadoop Eco 상태 확인
@@ -62,7 +63,7 @@ $ ambari-admin-password-reset
     - Hive
     ```bash
     $ hive
-    hive> select * from sample_07 limit 10;
+    hive> select * from sample_07 limit 5;
     OK
     00-0000	All Occupations	134354250	40690
     11-0000	Management occupations	6003930	96150
@@ -77,10 +78,31 @@ $ ambari-admin-password-reset
 <br>
 
 ## API 관련 패키지 설치
+- API 모듈 패키지 파일 업로드
+
+|속성|값|
+|-|-|
+|API Gateway|core-api-gateway-1.0-SNAPSHOT-bin.tar.gz|
+|Globalworkflow|core-module-globalworkflow-1.0-SNAPSHOT-bin.tar.gz|
+|Streaming|core-module-streaming-1.0-SNAPSHOT-bin.tar.gz|
+|Hadoop batch|core-module-hadoopbatch-1.0-SNAPSHOT-bin.tar.gz|
+
 - Data API 모듈 설치
-    - API Gateway
-    - Streaming
-    - Hadoop Batch  
+```bash
+# API 홈 디렉토리 생성
+$ mkdir -p /root/data-api 
+$ cd /root/data-api
+
+# 모듈 패키질 파일들 API 홈 디렉토리로 이동
+$ mv core-* ./data-api
+
+# 모듈 tar.gz 압축 풀기
+$ tar zxvf core-api-gateway-1.0-SNAPSHOT-bin.tar.gz
+$ tar zxvf core-module-globalworkflow-1.0-SNAPSHOT-bin.tar.gz
+$ tar zxvf core-api-streaming-1.0-SNAPSHOT-bin.tar.gz
+$ tar zxvf core-api-hadoopbatch-1.0-SNAPSHOT-bin.tar.gz
+```
+  
 - DB 스키마 생성
     - MySQL 접속 정보 (공통)
 
@@ -139,7 +161,16 @@ GRANT ALL PRIVILEGES ON *.* TO 'wfs'@'sandbox-hdp.hortonworks.com';
 FLUSH PRIVILEGES;
 ```
 
-- 및 테이블 생성 : streaming, sso
+- 모듈 별 테이블 생성
+```sql
+-- Create tables for dpcore_globalworkflow
+$ cd /root/data-api/core-module-globalworkflow-1.0-SNAPSHOT/conf
+$ mysql -ustreaming -p dpcore_streaming < streaming_meta.sql
+
+-- Create tables for dpcore_streaming
+$ cd /root/data-api/core-module-streaming-1.0-SNAPSHOT/conf
+$ mysql -ustreaming -p dpcore_streaming < streaming_meta.sql
+```
 
 
 <br>

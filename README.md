@@ -9,7 +9,8 @@
 - putty 다운로드
 > https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html
 - Local PC hosts 에 hostname 등록
-> 127.0.0.1 sandbox.hortonworks.com sandbox-hdp.hortonworks.com sandbox-hdf.hortonworks.com
+
+    `127.0.0.1 sandbox-hdp.hortonworks.com`
 - HDP 샌드박스에 ssh 접속 (putty)
     - hostname : sandbox-hdp.hortonworks.com
     - port : 2222

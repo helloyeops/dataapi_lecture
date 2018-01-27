@@ -1,21 +1,36 @@
 # Data API 실습
 
 ## 실습 환경 구축
+
 - Virtualbox 다운로드 & 설치
 > https://www.virtualbox.org
-
 - HDP 샌드박스(v2.6.3) 다운로드
 > https://downloads-hortonworks.akamaized.net/sandbox-hdp-2.6.3/HDP_2.6.3_virtualbox_16_11_2017.ova
-
-- root 패스워드 변경 : hadoop(초기 패스워드) -> bigdata1234
-
+- putty 다운로드
+> https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html
 - Local PC hosts 에 hostname 등록
-
 > 127.0.0.1 sandbox.hortonworks.com sandbox-hdp.hortonworks.com sandbox-hdf.hortonworks.com
-
+- HDP 샌드박스에 ssh 접속 (putty)
+    - hostname : sandbox-hdp.hortonworks.com
+    - port : 2222
+    - username : root
+    - password : hadoop
+- root 패스워드 변경 : hadoop(초기 패스워드) -> bigdata1234
+- Ambari 관리자 암호 설정<br>
+```bash
+$ ambari-admin-password-reset
+# admin 으로 변경
+```
+- Ambari 서버 start<br>
+`$ ambari-server start`
 - HDFS 계정으로 전환<br>
-`su - hdfs`
+`$ su - hdfs`
 
+## Hadoop 구동
+- Ambari 접속
+> http://sandbox-hdp.hortonworks.com:8080 (admin/admin)
+
+## API 관련 패키지 설치
 <br>
 
 - Data API 모듈 설치 : API Gateway, Streaming, SSO, OAuth

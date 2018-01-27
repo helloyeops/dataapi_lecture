@@ -24,8 +24,7 @@ $ ambari-admin-password-reset
 ```
 ## Hadoop 구동 및 상태 확인
 - Ambari 접속 (Web browser)
-> http://sandbox-hdp.hortonworks.com:8080<br>
-> (admin / admin)
+> http://sandbox-hdp.hortonworks.com:8080 (admin / admin)
 - Hadoop Eco 구동
     - HDFS
     - YARN
@@ -69,17 +68,36 @@ $ ambari-admin-password-reset
     11-1031	Legislators	61110	33880
     Time taken: 1.466 seconds, Fetched: 10 row(s)
     ```
+    - Oozie
+    > http://sandbox-hdp.hortonworks.com:11000/oozie
 
 ## API 관련 패키지 설치
-<br>
+- Data API 모듈 설치
+    - API Gateway
+    - Streaming
+    - Hadoop Batch
+    - SSO, OAuth    
+- DB 스키마 생성
+    - MySQL 접속 정보 (공통)
 
-- Data API 모듈 설치 : API Gateway, Streaming, SSO, OAuth
+    |속성|값|
+    |-|-|
+    |Driver|com.mysql.jdbc.Driver|
+    |Host|sandbox-hdp.hortonworks.com|
+    |Port|3306|
+    |username|root|
+    |Password|hadoop|
 
-<br>
+    - Database 명
 
-- DB(MariaDB) 접속 : root / hadoop
+    |속성|값|
+    |-|-|
+    |Globalworkflow|dpcore_globalworkflow|
+    |Streaming|dpcore_streaming|
+    |Hadoop Batch|dpcore_|
+    |SSO||
+    |OAuth||
 
-<br>
 
 - 데이터베이스 및 테이블 생성 : streaming, sso
 

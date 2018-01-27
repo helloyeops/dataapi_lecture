@@ -38,11 +38,37 @@ $ ambari-admin-password-reset
     - HDFS
     ```bash
     $ hadoop fs -ls /
+    Found 13 items
+    drwxrwxrwx   - yarn   hadoop          0 2017-11-10 14:59 /app-logs
+    drwxr-xr-x   - hdfs   hdfs            0 2017-11-10 14:45 /apps
+    drwxr-xr-x   - yarn   hadoop          0 2017-11-10 14:37 /ats
+    drwxr-xr-x   - hdfs   hdfs            0 2017-11-10 14:52 /demo
+    drwxr-xr-x   - hdfs   hdfs            0 2017-11-10 14:38 /hdp
+    drwx------   - livy   hdfs            0 2017-11-10 14:40 /livy2-recovery
+    drwxr-xr-x   - mapred hdfs            0 2017-11-10 14:38 /mapred
+    drwxrwxrwx   - mapred hadoop          0 2017-11-10 14:38 /mr-history
+    drwxr-xr-x   - hdfs   hdfs            0 2017-11-10 14:37 /ranger
+    drwxrwxrwx   - spark  hadoop          0 2017-11-10 15:08 /spark2-history
+    drwxrwxrwx   - hdfs   hdfs            0 2017-11-10 15:00 /tmp
+    drwxr-xr-x   - hdfs   hdfs            0 2017-11-10 15:00 /user
+    drwxr-xr-x   - hdfs   hdfs            0 2017-11-10 14:38 /webhdfs
     ```
     - YARN
     > http://sandbox-hdp.hortonworks.com:8088
     - MapReduce
     > http://sandbox-hdp.hortonworks.com:19888
+    - Hive
+    ```bash
+    $ hive
+    hive> select * from sample_07 limit 10;
+    OK
+    00-0000	All Occupations	134354250	40690
+    11-0000	Management occupations	6003930	96150
+    11-1011	Chief executives	299160	151370
+    11-1021	General and operations managers	1655410	103780
+    11-1031	Legislators	61110	33880
+    Time taken: 1.466 seconds, Fetched: 10 row(s)
+    ```
 
 ## API 관련 패키지 설치
 <br>

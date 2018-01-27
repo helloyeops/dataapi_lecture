@@ -86,22 +86,17 @@
 <br>
 
 ## API 관련 패키지 설치
-- API 모듈 패키지 파일 업로드
+- API 모듈 패키지 다운로드
 
-    |속성|값|
-    |-|-|
-    |API Gateway|core-api-gateway-1.0-SNAPSHOT-bin.tar.gz|
-    |Globalworkflow|core-module-globalworkflow-1.0-SNAPSHOT-bin.tar.gz|
-    |Streaming|core-module-streaming-1.0-SNAPSHOT-bin.tar.gz|
-    |Hadoop batch|core-module-hadoopbatch-1.0-SNAPSHOT-bin.tar.gz|
-
+    > https://github.com/helloyeops/dataapi_lecture
+- HDP Sandbox 로 파일 업로드 (FTP 이용)
 - Data API 모듈 설치
     ```bash
-    # API 홈 디렉토리 생성
-    $ mkdir -p /root/data-api 
-    $ cd /root/data-api
+    $ cd ~/
+    $ unzip dataapi_lecture-master.zip
 
     # 모듈 패키질 파일들 API 홈 디렉토리로 이동
+    $ cd dataapi_lecture-master/api-modules
     $ mv core-* ./data-api
 
     # 모듈 tar.gz 압축 풀기
@@ -124,11 +119,11 @@
 
     - Database 명
 
-        |속성|값|
-        |-|-|
-        |Globalworkflow|dpcore_globalworkflow|
-        |Streaming|dpcore_streaming|
-        |Hadoop Batch|wfs|
+        |모듈|DB명|Username|Password|
+        |-|-|-|-|
+        |Globalworkflow|dpcore_globalworkflow|globalworkflow|glbalworkflow
+        |Streaming|dpcore_streaming|streaming|streaming|
+        |Hadoop Batch|wfs|wfs|wfs|
 - DB 접속
     ```bash
     $ mysql -uroot -p
@@ -139,12 +134,12 @@
     -- Globalworkflow
     CREATE DATABASE dpcore_globalworkflow;
 
-    CREATE USER 'dpcore_globalworkflow'@'%' IDENTIFIED BY 'globalworkflow';
-    GRANT ALL PRIVILEGES ON *.* TO 'dpcore_globalworkflow'@'%';
-    CREATE USER 'dpcore_globalworkflow'@'localhost' IDENTIFIED BY 'globalworkflow';
-    GRANT ALL PRIVILEGES ON *.* TO 'dpcore_globalworkflow'@'localhost';
-    CREATE USER 'dpcore_globalworkflow'@'sandbox-hdp.hortonworks.com' IDENTIFIED BY 'globalworkflow';
-    GRANT ALL PRIVILEGES ON *.* TO 'dpcore_globalworkflow'@'sandbox-hdp.hortonworks.com';
+    CREATE USER 'globalworkflow'@'%' IDENTIFIED BY 'globalworkflow';
+    GRANT ALL PRIVILEGES ON *.* TO 'globalworkflow'@'%';
+    CREATE USER 'globalworkflow'@'localhost' IDENTIFIED BY 'globalworkflow';
+    GRANT ALL PRIVILEGES ON *.* TO 'globalworkflow'@'localhost';
+    CREATE USER 'globalworkflow'@'sandbox-hdp.hortonworks.com' IDENTIFIED BY 'globalworkflow';
+    GRANT ALL PRIVILEGES ON *.* TO 'globalworkflow'@'sandbox-hdp.hortonworks.com';
 
     -- Streaming
     CREATE DATABASE dpcore_streaming;
@@ -171,14 +166,19 @@
 
 - 모듈 별 테이블 생성
     ```sql
-    -- Create tables for dpcore_globalworkflow
-    $ cd /root/data-api/core-module-globalworkflow-1.0-SNAPSHOT/conf
-    $ mysql -ustreaming -p dpcore_streaming < streaming_meta.sql
+    $ cd /root/dataapi_lecture-master/api-modules/init-datas
+    
+    -- Globalworkflow 테이블 생성
+    $ mysql -ustreaming -p dpcore_streaming < GLOBALWORKFLOW_INIT.sql
 
-    -- Create tables for dpcore_streaming
+    -- Streaming 테이블 생성
     $ cd /root/data-api/core-module-streaming-1.0-SNAPSHOT/conf
-    $ mysql -ustreaming -p dpcore_streaming < streaming_meta.sql
+    $ mysql -ustreaming -p dpcore_streaming < STREAMING_INIT.sql
+
+    -- Hadoop batch 테이블 생성
     ```
+
+- 초기 데이터 입력
 
 
 <br>

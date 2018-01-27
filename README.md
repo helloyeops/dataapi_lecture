@@ -62,9 +62,11 @@ $ ambari-admin-password-reset
     drwxr-xr-x   - hdfs   hdfs            0 2017-11-10 14:38 /webhdfs
     ```
     - YARN
-    > http://sandbox-hdp.hortonworks.com:8088
+    
+        > http://sandbox-hdp.hortonworks.com:8088
     - MapReduce
-    > http://sandbox-hdp.hortonworks.com:19888
+    
+        > http://sandbox-hdp.hortonworks.com:19888
     - Hive
     ```bash
     $ hive

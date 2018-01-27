@@ -134,7 +134,7 @@
     $ mysql -uroot -p
     # password : haddop
     ```
-    - 데이터베이스/사용자 생성
+- 데이터베이스/사용자 생성
     ```sql
     -- Globalworkflow
     CREATE DATABASE dpcore_globalworkflow;
@@ -174,7 +174,7 @@
     -- Create tables for dpcore_globalworkflow
     $ cd /root/data-api/core-module-globalworkflow-1.0-SNAPSHOT/conf
     $ mysql -ustreaming -p dpcore_streaming < streaming_meta.sql
-    
+
     -- Create tables for dpcore_streaming
     $ cd /root/data-api/core-module-streaming-1.0-SNAPSHOT/conf
     $ mysql -ustreaming -p dpcore_streaming < streaming_meta.sql

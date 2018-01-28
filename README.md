@@ -26,6 +26,10 @@
     # admin 으로 변경
     $ ambari-admin-password-reset
     ```
+- hdfs 계정으로 전환
+    ```bash
+    su - hdfs
+    ```
 
 <br>
 

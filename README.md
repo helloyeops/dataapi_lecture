@@ -226,9 +226,9 @@
 <br>
 
 - API 테스트
-```bash
-$ curl http://sandbox-hdp.hortonworks.com:7070/api/v1/streaming
-```
+    ```bash
+    $ curl http://sandbox-hdp.hortonworks.com:7070/api/v1/streaming
+    ```
 
 > 로그인 서버로부터 Access Token 획득
 

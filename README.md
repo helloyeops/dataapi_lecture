@@ -17,6 +17,7 @@
 
 - HDP Sandobx 포트포워딩 설정
     - Docker ssh 접속정보
+
         |속성|값|
         |-|-|
         |hostname|sandbox-hdp.hortonworks.com|
@@ -40,6 +41,7 @@
         ```
 - HDP 샌드박스에 ssh 접속 (putty)
     - ssh 접속정보
+    
         |속성|값|
         |-|-|
         |hostname|sandbox-hdp.hortonworks.com|

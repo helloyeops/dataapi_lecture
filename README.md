@@ -14,7 +14,39 @@
 - Local PC hosts 에 hostname 등록
 
     `127.0.0.1 sandbox-hdp.hortonworks.com`
+
+- Sandobx 포트포워딩 설정
+    - Docker ssh 접속정보
+        |속성|값|
+        |-|-|
+        |hostname|sandbox-hdp.hortonworks.com|
+        |port|2212|
+        |username|root|
+        |password|hadoop|
+    - Docker container 설정
+        ```bash        
+        $ vi /root/start_scripts/start_sandbox.sh
+        docker run -v hadoop:/hadoop --name sandbox --hostname "sandbox.hortonworks.com" --privileged -d 
+        -p 7070:7070 \
+        -p 9056:9056 \
+        -p 6080:6080 \
+        -p 9090:9090 \
+        -p 9000:9000 \
+        ...
+
+        $ docker commit sandbox-hdp sandbox-hdp
+        $ docker stop sandbox-hdp
+        $ docker rm sandbox-hdp
+        $ init 6
+        ```
 - HDP 샌드박스에 ssh 접속 (putty)
+    - ssh 접속정보
+        |속성|값|
+        |-|-|
+        |hostname|sandbox-hdp.hortonworks.com|
+        |port|2222|
+        |username|root|
+        |password|hadoop|
     - hostname : sandbox-hdp.hortonworks.com
     - port : 2222
     - username : root
@@ -237,11 +269,81 @@
 <br>
 
 - Kafka 기동 및 데이터 생성
+    ```bash
+    $ cd ~/dataapi_lecture/streaming-test
+    # 테스트 데이터 생성
+    $ python credit_gen.py
 
-> python credit_gen.py
+    # Kafka consumer 실행
+    $ tail -f credit_gen.log | /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --topic credit   --broker-list sandbox-hdp.hortonworks.com:6667
+    ```
 
-> tail -f credit_gen.log | /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --topic credit --broker-list sandbox-hdp.hortonworks.com:6667
 
 <br>
 
 ## Pipeline 설치
+- Tomcat 다운로드 & 설치
+    ```bash
+    $ cd ~
+    # tomcat 다운르도
+    $ wget http://mirror.navercorp.com/apache/tomcat/tomcat-8/v8.5.27/bin/apache-tomcat-8.5.27.tar.gz
+
+    # tomcat 설치
+    $ tar zxvf apache-tomcat-8.5.27.tar.gz
+
+    # tomcat 설정
+    $ cd ~/apache-tomcat-8.5.27/conf
+    
+    # 1. Port 번호 변경 8080 => 9056
+    # 2. Context root 변경
+    $ vi server.xml
+     69     <Connector port="9056" protocol="HTTP/1.1"
+     70                connectionTimeout="20000"
+     71                redirectPort="8443" />
+        ...
+        ...
+        ...
+    148       <Host name="localhost"  appBase="webapps"
+    149             unpackWARs="true" autoDeploy="true">
+    150         <Context path="" docBase="pipeline-front-1.0"  reloadable="false" > </Context>
+
+    # 사용하지 않는 application 삭제
+    $ cd ~/apache-tomcat-8.5.27/webapps
+    $ rm -rf manager ROOT
+    ```
+- Pipeline 설치 및 실행
+    - Database 설치
+    ```bash
+    # password : haddop
+    $ mysql -uroot -p
+    ```
+
+    ```sql
+    -- database 생성
+    CREATE DATABASE pipeline;
+
+    CREATE USER 'pipeline'@'%' IDENTIFIED BY 'pipeline';
+    GRANT ALL PRIVILEGES ON *.* TO 'pipeline'@'%';
+    CREATE USER 'pipeline'@'localhost' IDENTIFIED BY 'pipeline';
+    GRANT ALL PRIVILEGES ON *.* TO 'pipeline'@'localhost';
+    CREATE USER 'pipeline'@'sandbox-hdp.hortonworks.com' IDENTIFIED BY 'pipeline';
+    GRANT ALL PRIVILEGES ON *.* TO 'pipeline'@'sandbox-hdp.hortonworks.com';
+
+    FLUSH PRIVILEGES;
+    ```
+
+    ```bash
+    # Table 생성
+    $ cd ~/dataapi_lecture/init-datas
+    # password : pipeline
+    $ mysql -upipeline -p pipeline < PIPELINE_INIT.sql
+    ```
+    - Web application 설치
+    ```bash
+    # Pipeline 서비스 설치
+    $ cp ~/dataapi_lecture/services/pipeline-front-1.0.war ./
+
+    # 실행
+    $ cd ~/apache-tomcat-8.5.27/bin
+    $ ./startup.sh
+    ```

@@ -20,12 +20,6 @@
     - username : root
     - password : hadoop
 - root 패스워드 변경 : hadoop(초기 패스워드) -> bigdata1234
-- Ambari 관련 설정
-    ```bash
-    # abmari 관리자 password 변경(web 접근시 필요)
-    # admin 으로 변경
-    $ ambari-admin-password-reset
-    ```
 - hdfs 계정으로 전환
     ```bash
     # hdfs 계정에 패스워드 생성
@@ -39,7 +33,7 @@
 ## Hadoop 구동 및 상태 확인
 - Ambari 접속 (Web browser)
 
-    > http://sandbox-hdp.hortonworks.com:8080 (admin / admin)
+    > http://sandbox-hdp.hortonworks.com:8080 (raj_ops / raj_ops)
 - Hadoop Eco 구동
     - HDFS
     - YARN
@@ -199,7 +193,7 @@
 
 <br>
 
-- Streaming 엔진 HDFS에 업로드
+- Streaming 관련 설정
     ```bash
     $ cd ~/dataapi_lecture/streaming-engine
     
@@ -217,21 +211,24 @@
 
 - livy CR/LF 프로텍션 비활성화
     - Ambari 에서 설정
-        > Spark2 > Configs > Advanced livy2-conf > livy.server.csrf_protection.enabled : "false" 로 변경 후 재시작
+        - Spark2 > Configs > Advanced livy2-conf > livy.server.csrf_protection.enabled
+            
+            > "false" 로 변경 후 Spark2 서비스 재시작
 
 <br>
 
 - API 모듈 기동
-
-> API Gateway 기동
-
-> Streaming API 모듈 기동
+    - API Gateway 모듈 기동
+    - Globalworkflow 모듈 기동
+    - Hadoop batch 모듈 기동
+    - Streaming API 모듈 기동
 
 <br>
 
 - API 테스트
-
-> http://localhost:8765/api/v1/streaming
+```bash
+$ curl http://sandbox-hdp.hortonworks.com:7070/api/v1/streaming
+```
 
 > 로그인 서버로부터 Access Token 획득
 
@@ -244,3 +241,7 @@
 > python credit_gen.py
 
 > tail -f credit_gen.log | /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --topic credit --broker-list sandbox-hdp.hortonworks.com:6667
+
+<br>
+
+## Pipeline 설치

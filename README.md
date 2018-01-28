@@ -15,7 +15,7 @@
 
     `127.0.0.1 sandbox-hdp.hortonworks.com`
 
-- Sandobx 포트포워딩 설정
+- HDP Sandobx 포트포워딩 설정
     - Docker ssh 접속정보
         |속성|값|
         |-|-|
@@ -31,7 +31,6 @@
         -p 9056:9056 \
         -p 6080:6080 \
         -p 9090:9090 \
-        -p 9000:9000 \
         ...
 
         $ docker commit sandbox-hdp sandbox-hdp
@@ -51,8 +50,8 @@
     - port : 2222
     - username : root
     - password : hadoop
-- root 패스워드 변경 : hadoop(초기 패스워드) -> bigdata1234
-- hdfs 계정으로 전환
+- root 패스워드 변경 : hadoop(초기 패스워드) -> bigdata123
+- hdfs 계정으로 전환 (실습은 hdfs 계정으로 진행)
     ```bash
     # hdfs 계정에 패스워드 생성
     # "hdfs"로 설정

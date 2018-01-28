@@ -28,7 +28,10 @@
     ```
 - hdfs 계정으로 전환
     ```bash
-    su - hdfs
+    # hdfs 계정에 패스워드 생성
+    # "hdfs"로 설정
+    $ passwd hdfs
+    $ su - hdfs
     ```
 
 <br>
@@ -100,8 +103,8 @@
     $ unzip dataapi_lecture-master.zip
 
     # 모듈 패키질 파일들 API 홈 디렉토리로 이동
-    $ cd dataapi_lecture-master/api-modules
-    $ mv core-* ./data-api
+    $ cd ~/dataapi_lecture-master/api-modules
+    $ cp core-* ~/data-api
 
     # 모듈 tar.gz 압축 풀기
     $ tar zxvf core-api-gateway-1.0-SNAPSHOT-bin.tar.gz
@@ -170,13 +173,12 @@
 
 - 모듈 별 테이블 생성
     ```sql
-    $ cd /root/dataapi_lecture-master/api-modules/init-datas
+    $ cd ~/dataapi_lecture/api-modules/init-datas
     
     -- Globalworkflow 테이블 생성
-    $ mysql -ustreaming -p dpcore_streaming < GLOBALWORKFLOW_INIT.sql
+    $ mysql -uglobalworkflow -p dpcore_globalworkflow < GLOBALWORKFLOW_INIT.sql
 
     -- Streaming 테이블 생성
-    $ cd /root/data-api/core-module-streaming-1.0-SNAPSHOT/conf
     $ mysql -ustreaming -p dpcore_streaming < STREAMING_INIT.sql
 
     -- Hadoop batch 테이블 생성
@@ -198,16 +200,24 @@
 <br>
 
 - Streaming 엔진 HDFS에 업로드
+    ```bash
+    $ cd ~/dataapi_lecture/streaming-engine
+    
+    # 라이브러리/엔진 디렉토리 생성
+    $ hadoop fs -mkdir -p /user/spark/streaming/driver
+    $ hadoop fs -mkdir -p /user/spark/streaming/lib/
 
-> hadoop fs -put -f streaming-core-1.0-hdp263.jar /user/spark/streaming/driver/
-
-> hadoop fs -put -f phoenix-spark2-4.7.1-HBase1.1.jar /user/spark/streaming/lib/
-
-> hadoop fs -put -f mariadb-java-client-2.0.2.jar /user/spark/streaming/lib/
+    # 라이브러리/엔진 파일 HDFS로 업로드
+    $ hadoop fs -put -f streaming-core-1.0-hdp263.jar /user/spark/streaming/driver/
+    $ hadoop fs -put -f phoenix-spark2-4.7.1-HBase1.1.jar /user/spark/streaming/lib/
+    $ hadoop fs -put -f mariadb-java-client-2.0.2.jar /user/spark/streaming/lib/
+    ```
 
 <br>
 
 - livy CR/LF 프로텍션 비활성화
+    - Ambari 에서 설정
+        > Spark2 > Configs > Advanced livy2-conf > livy.server.csrf_protection.enabled : "false" 로 변경 후 재시작
 
 <br>
 

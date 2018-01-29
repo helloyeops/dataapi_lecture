@@ -39,6 +39,8 @@
         $ docker rm sandbox-hdp
         $ init 6
         ```
+    - Virtualbox => 설정 => 네트워크 => 고급 => 포트포워딩
+        - 7070, 9056 추가
 - HDP 샌드박스에 ssh 접속 (putty)
     - ssh 접속정보
     
@@ -69,12 +71,14 @@
     > http://sandbox-hdp.hortonworks.com:8080 (raj_ops / raj_ops)
 - Hadoop Eco 구동
     - HDFS
+        - Maintenance mode off
     - YARN
     - MapReduce
     - Hive
     - Oozie
     - Zookeeper
     - Kafka
+        - Maintenance mode off
     - Sark2
 - Hadoop Eco 상태 확인
     - HDFS
@@ -127,10 +131,10 @@
 - Data API 모듈 설치
     ```bash
     $ cd ~/
-    $ unzip dataapi_lecture-master.zip
+    $ unzip dataapi_lecture.zip
 
     # 모듈 패키질 파일들 API 홈 디렉토리로 이동
-    $ cd ~/dataapi_lecture-master/api-modules
+    $ cd ~/dataapi_lecture/api-modules
     $ cp core-* ~/data-api
 
     # 모듈 tar.gz 압축 풀기
@@ -161,7 +165,7 @@
 - DB 접속
     ```bash
     $ mysql -uroot -p
-    # password : haddop
+    # password : hadoop
     ```
 - 데이터베이스/사용자 생성
     ```sql
@@ -200,7 +204,7 @@
 
 - 모듈 별 테이블 생성
     ```sql
-    $ cd ~/dataapi_lecture/api-modules/init-datas
+    $ cd ~/dataapi_lecture/init-datas
     
     -- Globalworkflow 테이블 생성
     $ mysql -uglobalworkflow -p dpcore_globalworkflow < GLOBALWORKFLOW_INIT.sql
@@ -222,7 +226,7 @@
 
 > ID / Password : skcc / skcc1234
 
-> Scope : core:all
+> Scope : core:all 
 
 <br>
 
@@ -232,7 +236,7 @@
     
     # 라이브러리/엔진 디렉토리 생성
     $ hadoop fs -mkdir -p /user/spark/streaming/driver
-    $ hadoop fs -mkdir -p /user/spark/streaming/lib/
+    $ hadoop fs -mkdir -p /user/spark/streaming/lib
 
     # 라이브러리/엔진 파일 HDFS로 업로드
     $ hadoop fs -put -f streaming-core-1.0-hdp263.jar /user/spark/streaming/driver/
@@ -252,15 +256,31 @@
 
 - API 모듈 기동
     - API Gateway 모듈 기동
+        ```bash
+        $ cd ~/dataapi-lecture/api-modules/core-api-gateway-1.0-SNAPSHOT/bin
+        $ ./api-start.sh
+        ```
     - Globalworkflow 모듈 기동
+        ```bash
+        $ cd ~/dataapi-lecture/api-modules/core-module-globalworkflow-1.0-SNAPSHOT/bin
+        $ ./api-start.sh
+        ```
     - Hadoop batch 모듈 기동
+        ```bash
+        $ cd ~/dataapi-lecture/api-modules/core-module-hadoopbatch-1.0-SNAPSHOT/bin
+        $ ./api-start.sh
+        ```
     - Streaming API 모듈 기동
+        ```bash
+        $ cd ~/dataapi-lecture/api-modules/core-module-streaming-1.0-SNAPSHOT/bin
+        $ ./api-start.sh
+        ```
 
 <br>
 
-- API 테스트
+- API 기동 확인
     ```bash
-    $ curl http://sandbox-hdp.hortonworks.com:7070/api/v1/streaming
+    $ curl http://sandbox-hdp.hortonworks.com:7070/api/v1/globalworkflow/worfklow
     ```
 
 > 로그인 서버로부터 Access Token 획득
@@ -283,17 +303,10 @@
 <br>
 
 ## Pipeline 설치
-- Tomcat 다운로드 & 설치
+- Tomcat 설정
     ```bash
-    $ cd ~
-    # tomcat 다운르도
-    $ wget http://mirror.navercorp.com/apache/tomcat/tomcat-8/v8.5.27/bin/apache-tomcat-8.5.27.tar.gz
-
-    # tomcat 설치
-    $ tar zxvf apache-tomcat-8.5.27.tar.gz
-
     # tomcat 설정
-    $ cd ~/apache-tomcat-8.5.27/conf
+    $ cd ~/dataapi_lecture/apache-tomcat-8.5.27/conf
     
     # 1. Port 번호 변경 8080 => 9056
     # 2. Context root 변경
@@ -306,11 +319,7 @@
         ...
     148       <Host name="localhost"  appBase="webapps"
     149             unpackWARs="true" autoDeploy="true">
-    150         <Context path="" docBase="pipeline-front-1.0"  reloadable="false" > </Context>
-
-    # 사용하지 않는 application 삭제
-    $ cd ~/apache-tomcat-8.5.27/webapps
-    $ rm -rf manager ROOT
+    150         <Context path="" docBase="pipeline-front-1.0"  reloadable="false" ></Context>
     ```
 - Pipeline 설치 및 실행
     - Database 설치
@@ -342,9 +351,9 @@
     - Web application 설치
     ```bash
     # Pipeline 서비스 설치
-    $ cp ~/dataapi_lecture/services/pipeline-front-1.0.war ./
+    $ cp ~/dataapi_lecture/services/pipeline-front-1.0.war ~/dataapi_lecture/apache-tomcat-8.5.27/webapps
 
     # 실행
-    $ cd ~/apache-tomcat-8.5.27/bin
+    $ cd ~/dataapi_lecture/apache-tomcat-8.5.27/bin
     $ ./startup.sh
     ```

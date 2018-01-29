@@ -125,17 +125,14 @@
 
 ## API 관련 패키지 설치
 - API 모듈 패키지 다운로드
-
-    > https://github.com/helloyeops/dataapi_lecture
-- HDP Sandbox 로 파일 업로드 (FTP 이용)
+    ```bash
+    # HDP Sandbox 에서 수행)
+    $ git clone https://github.com/helloyeops/dataapi_lecture.git
+    ```
+    
 - Data API 모듈 설치
     ```bash
-    $ cd ~/
-    $ unzip dataapi_lecture.zip
-
-    # 모듈 패키질 파일들 API 홈 디렉토리로 이동
     $ cd ~/dataapi_lecture/api-modules
-    $ cp core-* ~/data-api
 
     # 모듈 tar.gz 압축 풀기
     $ tar zxvf core-api-gateway-1.0-SNAPSHOT-bin.tar.gz
@@ -211,8 +208,6 @@
 
     -- Streaming 테이블 생성
     $ mysql -ustreaming -p dpcore_streaming < STREAMING_INIT.sql
-
-    -- Hadoop batch 테이블 생성
     ```
 
 <br>
@@ -228,26 +223,31 @@
 <br>
 
 - Streaming 관련 설정
-    ```bash
-    $ cd ~/dataapi_lecture/streaming-engine
-    
-    # 라이브러리/엔진 디렉토리 생성
-    $ hadoop fs -mkdir -p /user/spark/streaming/driver
-    $ hadoop fs -mkdir -p /user/spark/streaming/lib
+    - 라이브러리 복사
+        ```bash
+        $ cd ~/dataapi_lecture/streaming-engine
 
-    # 라이브러리/엔진 파일 HDFS로 업로드
-    $ hadoop fs -put -f streaming-core-1.0-hdp263.jar /user/spark/streaming/driver/
-    $ hadoop fs -put -f phoenix-spark2-4.7.1-HBase1.1.jar /user/spark/streaming/lib/
-    $ hadoop fs -put -f mariadb-java-client-2.0.2.jar /user/spark/streaming/lib/
-    ```
+        # 라이브러리/엔진 디렉토리 생성
+        $ hadoop fs -mkdir -p /user/spark/streaming/driver
+        $ hadoop fs -mkdir -p /user/spark/streaming/lib
 
-<br>
+        # 라이브러리/엔진 파일 HDFS로 업로드
+        $ hadoop fs -put -f streaming-core-1.0-hdp263.jar /user/spark/streaming/driver/
+        $ hadoop fs -put -f phoenix-spark2-4.7.1-HBase1.1.jar /user/spark/streaming/lib/
+        $ hadoop fs -put -f mariadb-java-client-2.0.2.jar /user/spark/streaming/lib/
+        ```
+    - livy CR/LF 프로텍션 비활성화
+        - Ambari => Spark2 => Configs => Advanced livy2-conf (아래 설정 변경 후, 재시작)
 
-- livy CR/LF 프로텍션 비활성화
-    - Ambari 에서 설정
-        - Spark2 > Configs > Advanced livy2-conf > livy.server.csrf_protection.enabled
+            > livy.server.csrf_protection.enabled=false
+
+- Hadoop batch 관련 설정
+    - Proxy 사용자 추가
+        - Ambari => Oozie => Configs => Custom oozie-site => Add property ... (아래 설정 추가 후, 재시작)
+
+            > oozie.service.ProxyUserService.proxyuser.hdfs.hosts=*
             
-            > "false" 로 변경 후 Spark2 서비스 재시작
+            > oozie.service.ProxyUserService.proxyuser.hdfs.groups=*
 
 <br>
 
@@ -354,3 +354,5 @@
     $ cd ~/dataapi_lecture/apache-tomcat-8.5.27/bin
     $ ./startup.sh
     ```
+    - 로컬 웹 브라우즈(Chrome) 에서 Pipeline 서비스 접속
+        > http://sandbox-hdp.hortonworks.com:9056

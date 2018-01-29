@@ -287,19 +287,6 @@
 
 <br>
 
-- Kafka 기동 및 데이터 생성
-    ```bash
-    $ cd ~/dataapi_lecture/streaming-test
-    # 테스트 데이터 생성
-    $ python credit_gen.py
-
-    # Kafka consumer 실행
-    $ tail -f credit_gen.log | /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --topic credit   --broker-list sandbox-hdp.hortonworks.com:6667
-    ```
-
-
-<br>
-
 ## Pipeline 설치
 - Tomcat 설정
     ```bash
@@ -357,3 +344,23 @@
     ```
     - 로컬 웹 브라우즈(Chrome) 에서 Pipeline 서비스 접속
         > http://sandbox-hdp.hortonworks.com:9056
+
+<br>
+
+## Tutorial 실습
+- Streaming 작업 workflow 작성
+    - 실시간 신용카드 부정거래 탐지
+    
+    
+- Batch 작업 workflow 작성
+    - 신용카드 사용내역 분석
+
+- Kafka 기동 및 데이터 생성
+    ```bash
+    $ cd ~/dataapi_lecture/streaming-test
+    # 테스트 데이터 생성
+    $ python credit_gen.py
+
+    # Kafka consumer 실행
+    $ tail -f credit_gen.log | /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --topic credit --broker-list sandbox-hdp.hortonworks.com:6667
+    ```

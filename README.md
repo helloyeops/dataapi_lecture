@@ -39,8 +39,9 @@
         $ docker rm sandbox-hdp
         $ init 6
         ```
-    - Virtualbox => 설정 => 네트워크 => 고급 => 포트포워딩
-        - 7070, 9056 추가
+    - Virtualbox 에서 포트포워딩 설정
+        - 설정 => 네트워크 => 고급 => 포트포워딩
+            - 7070, 9056 추가
 - HDP 샌드박스에 ssh 접속 (putty)
     - ssh 접속정보
     

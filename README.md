@@ -79,7 +79,7 @@
     - Zookeeper
     - Kafka
         - Maintenance mode off
-    - Sark2
+    - Spark2
 - Hadoop Eco 상태 확인
     - HDFS
         ```bash
@@ -214,9 +214,6 @@
 
     -- Hadoop batch 테이블 생성
     ```
-
-- 초기 데이터 입력
-
 
 <br>
 

@@ -191,17 +191,6 @@
     -- Streaming 테이블 생성
     $ mysql -uroot -p dpcore_streaming < STREAMING_INIT.sql
     ```
-
-<br>
-
-- API사용자 및 scope 추가
-
-> 로그인 서버 (SSO, OAuth) 기동 : http://localhost:8091/admin
-
-> ID / Password : skcc / skcc1234
-
-> Scope : core:all 
-
 <br>
 
 - Streaming 관련 설정
@@ -236,8 +225,6 @@
             
             > oozie.service.ProxyUserService.proxyuser.hdfs.groups=*
 
-<br>
-
 - API 모듈 기동
     - API Gateway 모듈 기동
         ```bash
@@ -260,16 +247,10 @@
         $ ./api-start.sh
         ```
 
-<br>
-
 - API 기동 확인
     ```bash
     $ curl http://sandbox-hdp.hortonworks.com:7070/api/v1/globalworkflow/worfklow
     ```
-
-> 로그인 서버로부터 Access Token 획득
-
-> Authorization 헤더에 Access Token 입력(Bearer xxxxx...) 후 API 호출
 
 <br>
 

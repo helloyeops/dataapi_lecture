@@ -66,7 +66,7 @@
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
     -->
-    <Connector port="8080" protocol="HTTP/1.1"
+    <Connector port="9056" protocol="HTTP/1.1"
                connectionTimeout="20000"
                redirectPort="8443" />
     <!-- A "Connector" using the shared thread pool-->
@@ -147,6 +147,7 @@
 
       <Host name="localhost"  appBase="webapps"
             unpackWARs="true" autoDeploy="true">
+            <Context path="" docBase="pipeline-front-1.0"  reloadable="false" ></Context>
 
         <!-- SingleSignOn valve, share authentication between web applications
              Documentation at: /docs/config/valve.html -->

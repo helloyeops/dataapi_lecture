@@ -174,15 +174,6 @@
     CREATE DATABASE dpcore_streaming;
     -- Hadoop bath
     CREATE DATABASE wfs;
-
-    CREATE USER 'wfs'@'%' IDENTIFIED BY 'wfs';
-    GRANT ALL PRIVILEGES ON *.* TO 'wfs'@'%';
-    CREATE USER 'wfs'@'localhost' IDENTIFIED BY 'wfs';
-    GRANT ALL PRIVILEGES ON *.* TO 'wfs'@'localhost';
-    CREATE USER 'wfs'@'sandbox-hdp.hortonworks.com' IDENTIFIED BY 'wfs';
-    GRANT ALL PRIVILEGES ON *.* TO 'wfs'@'sandbox-hdp.hortonworks.com';
-
-    FLUSH PRIVILEGES;
     ```
 
 - 모듈 별 테이블 생성

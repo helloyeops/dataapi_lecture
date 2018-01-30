@@ -20,7 +20,7 @@
     - for mac or linux
 
         > /etc/hosts
-    - `127.0.0.1 sandbox-hdp.hortonworks.com`   
+    `127.0.0.1 sandbox-hdp.hortonworks.com`   
 
 - HDP Sandobx 포트포워딩 설정
     - Docker ssh 접속정보

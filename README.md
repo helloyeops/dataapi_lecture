@@ -169,24 +169,8 @@
     ```sql
     -- Globalworkflow
     CREATE DATABASE dpcore_globalworkflow;
-
-    CREATE USER 'globalworkflow'@'%' IDENTIFIED BY 'globalworkflow';
-    GRANT ALL PRIVILEGES ON *.* TO 'globalworkflow'@'%';
-    CREATE USER 'globalworkflow'@'localhost' IDENTIFIED BY 'globalworkflow';
-    GRANT ALL PRIVILEGES ON *.* TO 'globalworkflow'@'localhost';
-    CREATE USER 'globalworkflow'@'sandbox-hdp.hortonworks.com' IDENTIFIED BY 'globalworkflow';
-    GRANT ALL PRIVILEGES ON *.* TO 'globalworkflow'@'sandbox-hdp.hortonworks.com';
-
     -- Streaming
     CREATE DATABASE dpcore_streaming;
-
-    CREATE USER 'streaming'@'%' IDENTIFIED BY 'globalworkflow';
-    GRANT ALL PRIVILEGES ON *.* TO '<사용자명>'@'%';
-    CREATE USER 'streaming'@'localhost' IDENTIFIED BY 'streaming';
-    GRANT ALL PRIVILEGES ON *.* TO 'streaming'@'localhost';
-    CREATE USER 'streaming'@'sandbox-hdp.hortonworks.com' IDENTIFIED BY 'streaming';
-    GRANT ALL PRIVILEGES ON *.* TO 'streaming'@'sandbox-hdp.hortonworks.com';
-
     -- Hadoop bath
     CREATE DATABASE wfs;
 
@@ -205,10 +189,10 @@
     $ cd ~/dataapi_lecture/init-datas
     
     -- Globalworkflow 테이블 생성
-    $ mysql -uglobalworkflow -p dpcore_globalworkflow < GLOBALWORKFLOW_INIT.sql
+    $ mysql -uroot -p dpcore_globalworkflow < GLOBALWORKFLOW_INIT.sql
 
     -- Streaming 테이블 생성
-    $ mysql -ustreaming -p dpcore_streaming < STREAMING_INIT.sql
+    $ mysql -uroot -p dpcore_streaming < STREAMING_INIT.sql
     ```
 
 <br>
@@ -316,15 +300,6 @@
     ```sql
     -- database 생성
     CREATE DATABASE pipeline;
-
-    CREATE USER 'pipeline'@'%' IDENTIFIED BY 'pipeline';
-    GRANT ALL PRIVILEGES ON *.* TO 'pipeline'@'%';
-    CREATE USER 'pipeline'@'localhost' IDENTIFIED BY 'pipeline';
-    GRANT ALL PRIVILEGES ON *.* TO 'pipeline'@'localhost';
-    CREATE USER 'pipeline'@'sandbox-hdp.hortonworks.com' IDENTIFIED BY 'pipeline';
-    GRANT ALL PRIVILEGES ON *.* TO 'pipeline'@'sandbox-hdp.hortonworks.com';
-
-    FLUSH PRIVILEGES;
     ```
 
     ```bash
@@ -350,7 +325,7 @@
 ## Tutorial 실습
 - Streaming 작업 workflow 작성
     - 실시간 신용카드 부정거래 탐지
-    
+
     
 - Batch 작업 workflow 작성
     - 신용카드 사용내역 분석

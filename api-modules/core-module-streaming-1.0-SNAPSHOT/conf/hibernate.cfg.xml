@@ -8,8 +8,8 @@
         <property name="hibernate.connection.url">
             jdbc:mariadb://sandbox-hdp.hortonworks.com:3306/dpcore_streaming?autoReconnect=true
         </property>
-        <property name="hibernate.connection.username">streaming</property>
-        <property name="hibernate.connection.password">streaming</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">hadoop</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MariaDB53Dialect</property>
         <property name="hibernate.default_schema">dpcore_streaming</property>
 

@@ -7,7 +7,7 @@
 	"executorCores": 2,
 	"numExecutors": 2,
 	"queue": "default",
-	"thriftServerPort": 22000,
+	"thriftServerPort": 10016,
 	"branches": [{
 		"components": [{
 			"subType": "kafka",
@@ -57,7 +57,7 @@
 			"subType": "jdbc",
 			"group": "writer",
 			"properties": {
-				"url": "jdbc:mariadb://localhost:3306/streaming?sessionVariables=sql_mode=ANSI_QUOTES",
+				"url": "jdbc:mariadb://localhost:3306/dpcore_streaming?sessionVariables=sql_mode=ANSI_QUOTES",
 				"driver": "org.mariadb.jdbc.Driver",
 				"user": "root",
 				"password": "hadoop"

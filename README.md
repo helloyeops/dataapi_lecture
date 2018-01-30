@@ -12,7 +12,6 @@
 
     > https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html
 - Local PC hosts 에 hostname 등록
-
     - for windows
 
         > C:\Windows\System32\drivers\etc\hosts 파일 수정

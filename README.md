@@ -29,8 +29,8 @@
         |hostname|sandbox-hdp.hortonworks.com|
         |port|2212|
         |username|root|
-        |password|hadoop|
-    - Docker container 설정
+        |password|hadoop
+    - Docker containe
         ```bash        
         $ vi /root/start_scripts/start_sandbox.sh
         docker run -v hadoop:/hadoop --name sandbox --hostname "sandbox.hortonworks.com" --privileged -d 
@@ -161,11 +161,11 @@
 
     - Database 명
 
-        |모듈|DB명|Username|Password|
-        |-|-|-|-|
-        |Globalworkflow|dpcore_globalworkflow|globalworkflow|glbalworkflow
-        |Streaming|dpcore_streaming|streaming|streaming|
-        |Hadoop Batch|wfs|wfs|wfs|
+        |모듈|DB명|
+        |-|-|
+        |Globalworkflow|dpcore_globalworkflow|
+        |Streaming|dpcore_streaming|
+        |Hadoop Batch|wfs|
 - DB 접속
     ```bash
     $ mysql -uroot -p

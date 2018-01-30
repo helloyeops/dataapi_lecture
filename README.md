@@ -13,7 +13,8 @@
     > https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html
 - Local PC hosts 에 hostname 등록
 
-    `127.0.0.1 sandbox-hdp.hortonworks.com`
+    > 윈도우 C:\Windows\System32\drivers\etc\hosts 파일 수정
+    - `127.0.0.1 sandbox-hdp.hortonworks.com`   
 
 - HDP Sandobx 포트포워딩 설정
     - Docker ssh 접속정보

@@ -200,7 +200,7 @@
 <br>
 
 - Streaming 관련 설정
-    - 라이브러리 복사
+    - 라이브러리 설치
         ```bash
         $ cd ~/dataapi_lecture/streaming-engine
 
@@ -219,6 +219,11 @@
             > livy.server.csrf_protection.enabled=false
 
 - Hadoop batch 관련 설정
+    - 라이브러리 설치
+        ```bash
+        # 라이브러리/엔진 파일 HDFS로 업로드
+        $ hadoop fs -put -f mariadb-java-client-2.0.2.jar /user/oozie/share/lib/lib_20171110144231/sqoop
+        ```
     - Proxy 사용자 추가
         - Ambari => Oozie => Configs => Custom oozie-site => Add property ... (아래 설정 추가 후, 재시작)
 
@@ -264,24 +269,6 @@
 <br>
 
 ## Pipeline 설치
-- Tomcat 설정
-    ```bash
-    # tomcat 설정
-    $ cd ~/dataapi_lecture/apache-tomcat-8.5.27/conf
-    
-    # 1. Port 번호 변경 8080 => 9056
-    # 2. Context root 변경
-    $ vi server.xml
-     69     <Connector port="9056" protocol="HTTP/1.1"
-     70                connectionTimeout="20000"
-     71                redirectPort="8443" />
-        ...
-        ...
-        ...
-    148       <Host name="localhost"  appBase="webapps"
-    149             unpackWARs="true" autoDeploy="true">
-    150         <Context path="" docBase="pipeline-front-1.0"  reloadable="false" ></Context>
-    ```
 - Pipeline 설치 및 실행
     - Database 설치
     ```bash
@@ -297,37 +284,176 @@
     ```bash
     # Table 생성
     $ cd ~/dataapi_lecture/init-datas
+
     # password : pipeline
-    $ mysql -upipeline -p pipeline < PIPELINE_INIT.sql
-    ```
-    - Web application 설치
-    ```bash
-    # Pipeline 서비스 설치
-    $ cp ~/dataapi_lecture/services/pipeline-front-1.0.war ~/dataapi_lecture/apache-tomcat-8.5.27/webapps
+    $ mysql -uroot -p pipeline < PIPELINE_INIT.sql
 
     # 실행
     $ cd ~/dataapi_lecture/apache-tomcat-8.5.27/bin
     $ ./startup.sh
     ```
-    - 로컬 웹 브라우즈(Chrome) 에서 Pipeline 서비스 접속
-        > http://sandbox-hdp.hortonworks.com:9056
+- 로컬 웹 브라우즈(Chrome) 에서 Pipeline 서비스 접속
+
+    > http://sandbox-hdp.hortonworks.com:9056
 
 <br>
 
 ## Tutorial 실습
 - Streaming 작업 workflow 작성
     - 실시간 신용카드 부정거래 탐지
+        - Streming
+            - name : _fds_real_
+            - interval : _5000_
+            - driverMemory : _1g_
+            - driverCores : _2_
+            - executorMemory : _1g_
+            - executorCores : _2_
+            - executorNumbers : _2_
+            - thriftPort : _22000_
+            - queue : _default_
+
+            1. Reader : Kafka
+
+                - zkQuorum : _sandbox-hdp.hortonworks.com:2181_
+                - threadNum : _1_
+                - receiverNum : _1_
+                - topics : _credit_
+                - group : _streaming_
+
+            1. Parser : CSV
+
+                - tableName : _credit_
+                - columnList
+                    - _TransactionDate(string)_
+                    - _TransactionID(string)_
+                    - _TransactionType(string)_
+                    - _CardNumber(string)_
+                    - _CardOwner(string)_
+                    - _ExpireDate(string)_
+                    - _Amount(integer)_
+                    - _MerchantID(string)_
+                    - _LocationX(integer)_
+                    - _LocationY(integer)_
+
+            1. Filter : String contain
+                
+                - targetColumn : _TransactionType_
+                - value : _P_
+
+            1. Clone : Stream clone
+                - 이벤트 탐지
+                    1. Function : Event
+                        - ruleScript
+                            ```javascript
+                            rule "detect stream data with rule"
+                            dialect "mvel"
+                            when
+                                $c : credit() from entry-point EventStream
+                                $bc : credit(
+                                    CardNumber==$c.CardNumber,
+                                    eval(($c.LocationX - LocationX) * ($c.LocationX - LocationX) + ($c.LocationY - LocationY) * ($c.LocationY -                             LocationY) > 5 * 5),
+                                    this before[0s, 60s] $c
+                                ) from entry-point EventStream
+                            then
+                                event.add($bc.toString() + " => " + $c.toString());
+                            end
+                            ```
+                        - entryPoint : _EventStream_
+                        - tableName : _event_detection_
+                        - newColumn : _event_
+
+                    1. Write : JDBC
+                        - url : _jdbc:mariadb://sandbox-hdp.hortonworks.com:3306/dpcore_streaming?sessionVariables=sql_mode=ANSI_QUOTES_
+                        - driver : _org.mariadb.jdbc.Driver_
+                        - username : _root_
+                        - password : _hadoop_
+                - 실시간 데이터 조회
+                    1. Write : SparkSQL
+                        - window : 30000
+    - Kafka 기동 및 데이터 생성
+        ```bash
+        $ cd ~/dataapi_lecture/streaming-test
+        # 테스트 데이터 생성
+        $ python credit_gen.py
+
+        # Kafka consumer 실행
+        $ tail -f credit_gen.log | /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --topic credit --broker-list     sandbox-hdp.hortonworks.com:6667
+        ```
+
+
 
     
 - Batch 작업 workflow 작성
-    - 신용카드 사용내역 분석
+    - 신용카드 그룹 별 통계 분석
+        - Batch
+            - name : _fds_batch_
 
-- Kafka 기동 및 데이터 생성
-    ```bash
-    $ cd ~/dataapi_lecture/streaming-test
-    # 테스트 데이터 생성
-    $ python credit_gen.py
+            1. Query
+                ```sql
+                CREATE EXTERNAL TABLE IF NOT EXISTS CARD_HISTORY ( TRANSACTION_DATE STRING, TRANSACTION_ID STRING, TRANSACTION_TYPE STRING, CARD_NUMBER STRING, CARD_OWNER STRING, EXPIRE_DATE STRING, AMOUNT INT, MERCHANT_ID STRING, LOCATION_X INT, LOCATION_Y INT ) COMMENT 'Card History Table' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION '${cardHistory}';
 
-    # Kafka consumer 실행
-    $ tail -f credit_gen.log | /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --topic credit --broker-list sandbox-hdp.hortonworks.com:6667
-    ```
+                CREATE EXTERNAL TABLE IF NOT EXISTS USERS ( USER_ID STRING, USER_NAME STRING, AGE INT, SEX STRING, ADDRESS STRING ) COMMENT 'User Table' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION '${user}';
+                
+                CREATE EXTERNAL TABLE IF NOT EXISTS MERCHANT ( MERCHANT_ID STRING, MERCHANT_NAME STRING, BUSINESS_TYPE STRING ) COMMENT 'Merchant Table' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION '${merchant}';
+                
+                CREATE TABLE IF NOT EXISTS STATISTICS_BY_BUSINESS_TYPE( BUSINESS_TYPE STRING, TOTAL_AMOUNT INT ) COMMENT 'Statistics per Business Type' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+                
+                CREATE TABLE IF NOT EXISTS STATISTICS_BY_SEX( SEX STRING, TOTAL_AMOUNT INT ) COMMENT 'Statistics per User Sex' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+                
+                CREATE TABLE IF NOT EXISTS STATISTICS_BY_AGE( AGE INT, TOTAL_AMOUNT INT ) COMMENT 'Statistics per Age' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+                
+                INSERT INTO TABLE STATISTICS_BY_BUSINESS_TYPE SELECT M.BUSINESS_TYPE, SUM(C.AMOUNT) AS TOTAL_AMOUNT FROM CARD_HISTORY C JOIN MERCHANT M ON (C.MERCHANT_ID = M.MERCHANT_ID) GROUP BY M.BUSINESS_TYPE;
+                
+                INSERT INTO TABLE STATISTICS_BY_SEX SELECT U.SEX, SUM(C.AMOUNT) AS TOTAL_AMOUNT FROM CARD_HISTORY C JOIN USERS U ON (C.CARD_OWNER = U.USER_ID) GROUP BY U.SEX;
+                
+                INSERT INTO TABLE STATISTICS_BY_AGE SELECT U.AGE, SUM(C.AMOUNT) AS TOTAL_AMOUNT FROM CARD_HISTORY C JOIN USERS U ON (C.CARD_OWNER = U.USER_ID) GROUP BY U.AGE;
+                ```
+            1. Sqoop 
+                - 업소별 카드 승인 평균 금액
+                - arguments
+                    - _export_
+                    - _--connect_
+                    - _jdbc:mariadb://localhost:3306/batch_
+                    - _--driver_
+                    - _org.mariadb.jdbc.Driver_
+                    - _--username_
+                    - _root_
+                    - _--password_
+                    - _hadoop_
+                    - _--table_
+                    - _STATISTICS_BY_BUSINESS_TYPE_
+                    - _--export-dir_
+                    - _/apps/hive/warehouse/statistics_by_business_type_
+            1. Sqoop
+                - 성별 별 카드 승인 평균 금액
+                - arguments
+                    - _export_
+                    - _--connect_
+                    - _jdbc:mariadb://localhost:3306/batch_
+                    - _--driver_
+                    - _org.mariadb.jdbc.Driver_
+                    - _--username_
+                    - _root_
+                    - _--password_
+                    - _hadoop_
+                    - _--table_
+                    - _STATISTICS_BY_SEX_
+                    - _--export-dir_
+                    - _/apps/hive/warehouse/statistics_by_business_sex_
+            1. Sqoop
+                - 연령 별 카드 승인 평균 금액
+                - arguments
+                    - _export_
+                    - _--connect_
+                    - _jdbc:mariadb://localhost:3306/batch_
+                    - _--driver_
+                    - _org.mariadb.jdbc.Driver_
+                    - _--username_
+                    - _root_
+                    - _--password_
+                    - _hadoop_
+                    - _--table_
+                    - _STATISTICS_BY_AGE_
+                    - _--export-dir_
+                    - _/apps/hive/warehouse/statistics_by_business_age_
+            

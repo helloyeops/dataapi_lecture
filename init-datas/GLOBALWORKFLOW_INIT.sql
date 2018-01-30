@@ -21,6 +21,5 @@ CREATE TABLE `GLOBALWORKFLOW_JOB` (
   `componentJobId` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `componentName` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `uuid` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `GLOBALWORKFLOW_JOB_componentId_uindex` (`componentId`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3157 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

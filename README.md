@@ -277,8 +277,8 @@
 <br>
 
 ## Tutorial 실습
-- Streaming 작업 workflow 작성
-    - 실시간 신용카드 부정거래 탐지
+- Streaming : 실시간 신용카드 부정거래 탐지 
+    - Workflow 작성
         - Streming
             - name : _fds_real_
             - interval : _5000_
@@ -348,6 +348,10 @@
                 - 실시간 데이터 조회
                     1. Write : SparkSQL
                         - window : 30000
+    - Streaming job 실행 확인
+
+        > http://sandbox-hdp.hortonworks.com:8088/
+
     - Kafka 기동 및 데이터 생성
         ```bash
         $ cd ~/dataapi_lecture/streaming-test
@@ -355,14 +359,106 @@
         $ python credit_gen.py
 
         # Kafka consumer 실행
-        $ tail -f credit_gen.log | /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --topic credit --broker-list     sandbox-hdp.hortonworks.com:6667
+        $ tail -f credit_gen.log | /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --topic credit --broker-list sandbox-hdp.hortonworks.com:6667
+        ```
+        
+    - 실시간 데이터 확인
+        ```bash
+        // job status 업데이트
+        $ curl http://sandbox-hdp.hortonworks.com:7070/api/v1/streaming/job
+
+        // data 확인
+        $ curl http://sandbox-hdp.hortonworks.com:7070/api/v1/streaming/sql/execute?jobId=1&sql=select * from credit
+        ```
+    - Event 탐지 데이터 확인
+        ```bash
+        # password : hadoop
+        $ mysql -uroot -p
+        mysql> use dpcore_steaming;
+        mysql> select * from event_detiction
         ```
 
 
+- 신용카드 그룹 별 통계 작업
+    - 샘플 데이터 HDFS 로 업로드
+        ```bash
+        $ cd ~/dataapi-lecture/batch-sample
 
-    
-- Batch 작업 workflow 작성
-    - 신용카드 그룹 별 통계 분석
+        # 디렉토리 생성
+        $ hadoop fs -mkdir -p /tmp/table/card
+        $ hadoop fs -mkdir -p /tmp/table/user
+        $ hadoop fs -mkdir -p /tmp/table/merchant
+
+        # 파일 업로드(HDFS)
+        $ hadoop fs -put card.csv /tmp/table/card
+        $ hadoop fs -put user.csv /tmp/table/user
+        $ hadoop fs -put merchant.csv /tmp/table/merchant
+        ```
+    - Hive 에서 데이터 조회 및 분석
+        - Hive 실행
+            ```bash
+            $ hive  
+            ```
+        - 스키마 생성 & 데이터 조회/분석
+            ```sql
+            -- 카드 사용 내역 테이블 생성
+            CREATE EXTERNAL TABLE IF NOT EXISTS CARD_HISTORY (
+                TRANSACTION_DATE STRING, 
+                TRANSACTION_ID STRING, 
+                TRANSACTION_TYPE STRING, 
+                CARD_NUMBER STRING, 
+                CARD_OWNER STRING, 
+                EXPIRE_DATE STRING, 
+                AMOUNT INT, 
+                MERCHANT_ID STRING, 
+                LOCATION_X INT, 
+                LOCATION_Y INT 
+                ) 
+            COMMENT 'Card History Table' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION '/tmp/table/card';
+
+            -- 사용자 테이블 생성
+            CREATE EXTERNAL TABLE IF NOT EXISTS USERS ( 
+                USER_ID STRING, 
+                USER_NAME STRING, 
+                AGE INT, 
+                SEX STRING,
+                ADDRESS STRING ) 
+            COMMENT 'User Table' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION '/tmp/table/user';
+            
+            -- 물품 테이블 생성
+            CREATE EXTERNAL TABLE IF NOT EXISTS MERCHANT ( 
+                MERCHANT_ID STRING, 
+                MERCHANT_NAME STRING, 
+                BUSINESS_TYPESTRING ) 
+            COMMENT 'Merchant Table' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION '/tmp/table/merchant';
+
+            -- 데이터 조회
+            SELECT * FROM CARD_HISTORY;
+
+            SELECT * FROM USER;
+
+            SELECT * FROM MERCHANT;
+            
+            -- 데이터 분석
+            -- 사업 별 카드 승인 금액 평균
+            INSERT INTO TABLE STATISTICS_BY_BUSINESS_TYPE 
+            SELECT M.BUSINESS_TYPE, SUM(C.AMOUNT) AS TOTAL_AMOUNT 
+            FROM CARD_HISTORY C JOIN MERCHANT M ON (C.MERCHANT_ID = M.MERCHANT_ID) 
+            GROUP BY M.BUSINESS_TYPE;
+                
+            -- 성별 카드 승인 금액 평균
+            INSERT INTO TABLE STATISTICS_BY_SEX 
+            SELECT U.SEX, SUM(C.AMOUNT) AS TOTAL_AMOUNT 
+            FROM CARD_HISTORY C JOINUSERS U ON (C.CARD_OWNER = U.USER_ID) 
+            GROUP BY U.SEX;
+            
+            -- 연령 별 카드 승인 금액 평균
+            INSERT INTO TABLE STATISTICS_BY_AGE 
+            SELECT U.AGE, SUM(C.AMOUNT) AS TOTAL_AMOUNT 
+            FROM CARD_HISTORY C JOINUSERS U ON (C.CARD_OWNER = U.USER_ID) 
+            GROUP BY U.AGE;
+            ```
+    - Workflow 작성
         - Batch
             - name : _fds_batch_
 
@@ -434,4 +530,6 @@
                     - _STATISTICS_BY_AGE_
                     - _--export-dir_
                     - _/apps/hive/warehouse/statistics_by_business_age_
-            
+    - Workflow 실행 확인
+
+        > http://sandbox-hdp.hortonworks.com:11000

@@ -24,7 +24,8 @@
 - HDP Sandobx 포트포워딩 설정
     - Virtualbox 에서 포트포워딩 설정
         - 설정 => 네트워크 => 고급 => 포트포워딩
-            - 7070, 9056 추가
+            - api : _127.0.0.1, 7070 ,7070_
+            - pipeline : _127.0.0.1, 9056, 9056_
     
     - Docker ssh 접속정보
 
@@ -251,7 +252,7 @@
 
 - API 기동 확인
     ```bash
-    $ curl http://sandbox-hdp.hortonworks.com:7070/api/v1/globalworkflow/worfklow
+    $ curl http://sandbox-hdp.hortonworks.com:7070/api/v1/globalworkflow/workflow
     ```
 
 <br>

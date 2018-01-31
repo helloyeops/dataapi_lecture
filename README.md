@@ -32,7 +32,7 @@
         |속성|값|
         |-|-|
         |hostname|sandbox-hdp.hortonworks.com|
-        |port|2212|
+        |port|2122|
         |username|root|
         |password|hadoop
     - Docker containe
@@ -138,17 +138,6 @@
     ```bash
     # HDP Sandbox 에서 수행)
     $ git clone https://github.com/helloyeops/dataapi_lecture.git
-    ```
-    
-- Data API 모듈 설치
-    ```bash
-    $ cd ~/dataapi_lecture/api-modules
-
-    # 모듈 tar.gz 압축 풀기
-    $ tar zxvf core-api-gateway-1.0-SNAPSHOT-bin.tar.gz
-    $ tar zxvf core-module-globalworkflow-1.0-SNAPSHOT-bin.tar.gz
-    $ tar zxvf core-api-streaming-1.0-SNAPSHOT-bin.tar.gz
-    $ tar zxvf core-api-hadoopbatch-1.0-SNAPSHOT-bin.tar.gz
     ```
   
 - DB 스키마 생성

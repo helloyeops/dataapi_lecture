@@ -220,22 +220,22 @@
 - API 모듈 기동
     - API Gateway 모듈 기동
         ```bash
-        $ cd ~/dataapi-lecture/api-modules/core-api-gateway-1.0-SNAPSHOT/bin
+        $ cd ~/dataapi_lecture/api-modules/core-api-gateway-1.0-SNAPSHOT/bin
         $ ./api-start.sh
         ```
     - Globalworkflow 모듈 기동
         ```bash
-        $ cd ~/dataapi-lecture/api-modules/core-module-globalworkflow-1.0-SNAPSHOT/bin
+        $ cd ~/dataapi_lecture/api-modules/core-module-globalworkflow-1.0-SNAPSHOT/bin
         $ ./api-start.sh
         ```
     - Hadoop batch 모듈 기동
         ```bash
-        $ cd ~/dataapi-lecture/api-modules/core-module-hadoopbatch-1.0-SNAPSHOT/bin
+        $ cd ~/dataapi_lecture/api-modules/core-module-hadoopbatch-1.0-SNAPSHOT/bin
         $ ./api-start.sh
         ```
     - Streaming API 모듈 기동
         ```bash
-        $ cd ~/dataapi-lecture/api-modules/core-module-streaming-1.0-SNAPSHOT/bin
+        $ cd ~/dataapi_lecture/api-modules/core-module-streaming-1.0-SNAPSHOT/bin
         $ ./api-start.sh
         ```
 
@@ -250,7 +250,7 @@
 - Pipeline 설치 및 실행
     - Database 설치
     ```bash
-    # password : haddop
+    # password : hadoop
     $ mysql -uroot -p
     ```
 
@@ -263,7 +263,7 @@
     # Table 생성
     $ cd ~/dataapi_lecture/init-datas
 
-    # password : pipeline
+    # password : hadoop
     $ mysql -uroot -p pipeline < PIPELINE_INIT.sql
 
     # 실행

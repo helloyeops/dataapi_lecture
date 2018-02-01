@@ -34,18 +34,17 @@
         |hostname|sandbox-hdp.hortonworks.com|
         |port|2122|
         |username|root|
-        |password|hadoop
- 
-    - Docker container  (vi 한줄 입력후 a 누르면 insert모드 => esc => :wq)
- 
+        |password|hadoop|
+    
+    - Docker container  (vi 한줄 입력후 a 누르면 insert모드 => esc => :wq)
+
         ```bash
         $ vi /root/start_scripts/start_sandbox.sh
         docker run -v hadoop:/hadoop --name sandbox --hostname "sandbox.hortonworks.com" --privileged -d 
         -p 7070:7070 \
         -p 9056:9056 \
         ...
-        ...
-
+        ...     
         # docker 상태 저장
         $ docker commit sandbox-hdp sandbox-hdp
         $ docker stop sandbox-hdp

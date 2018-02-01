@@ -34,15 +34,15 @@
         |hostname|sandbox-hdp.hortonworks.com|
         |port|2122|
         |username|root|
-        |password|hadoop
-    - Docker containe
+        |password|hadoop|
+        
+    - Docker container
+
         ```bash        
         $ vi /root/start_scripts/start_sandbox.sh
         docker run -v hadoop:/hadoop --name sandbox --hostname "sandbox.hortonworks.com" --privileged -d 
         -p 7070:7070 \
         -p 9056:9056 \
-        -p 6080:6080 \
-        -p 9090:9090 \
         ...
 
         $ docker commit sandbox-hdp sandbox-hdp

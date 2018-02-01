@@ -35,7 +35,7 @@
         |port|2122|
         |username|root|
         |password|hadoop|
-        
+
     - Docker container
 
         ```bash        
@@ -43,8 +43,8 @@
         docker run -v hadoop:/hadoop --name sandbox --hostname "sandbox.hortonworks.com" --privileged -d 
         -p 7070:7070 \
         -p 9056:9056 \
-        ...
 
+        # docker 상태 저장
         $ docker commit sandbox-hdp sandbox-hdp
         $ docker stop sandbox-hdp
         $ docker rm sandbox-hdp

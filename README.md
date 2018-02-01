@@ -37,12 +37,14 @@
         |password|hadoop|
 
     - Docker container
-
+    
         ```bash        
         $ vi /root/start_scripts/start_sandbox.sh
         docker run -v hadoop:/hadoop --name sandbox --hostname "sandbox.hortonworks.com" --privileged -d 
         -p 7070:7070 \
         -p 9056:9056 \
+        ...
+        ...
 
         # docker 상태 저장
         $ docker commit sandbox-hdp sandbox-hdp
